@@ -1,5 +1,5 @@
 const { Client, Events, GatewayIntentBits } = require('discord.js');
-const { token } = require('./config.json');
+require('dotenv').config();
 
 const client = new Client({
   intents: [
@@ -8,6 +8,9 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
   ],
 });
+
+const token = process.env.TOKEN;
+
 
 client.once(Events.ClientReady, readyClient => {
   console.log(`Ready! Logged in as ${readyClient.user.tag}`);
