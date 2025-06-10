@@ -32,6 +32,16 @@ const priorityOrder = {
   '4차': ['샌드위치', '핫도그', '과일 케이크', '퐁신 오믈렛', '로스트 치킨', '고구마 팬케이크', '홍합파스타'],
 };
 
+const RunebestPrices = {
+  "투시룬" : 240,
+  "저항룬" : 296,
+  "치유룬" : 341,
+  "호흡룬" : 357,
+  "성급룬" : 441,
+  "반감룬" : 469,
+  "경험룬" : 2557,
+}
+
 // 포맷 함수
 function formatItem(name, before, after, max) {
   if (before === null || after === null) {
@@ -44,6 +54,21 @@ function formatItem(name, before, after, max) {
     return `+🍳[${name}] | ${before} → ${after}  상한가`;
   } else {
     return ` 🍳[${name}] | ${before} → ${after}`;
+  }
+}
+
+//룬 포맷 함수
+function formatRune(name, before, after, max) {
+  if (before === null || after === null) {
+    return ` 🧪[[${name}] | 값 변경 없음`;
+  }
+
+  if (after === max) {
+    return `-🧪[[${name}] | ${before} → ${after}  최고가!!!`;
+  } else if (after >= max - 5) {
+    return `+🧪[[${name}] | ${before} → ${after}  상한가`;
+  } else {
+    return ` 🧪[[${name}] | ${before} → ${after}`;
   }
 }
 
@@ -173,6 +198,53 @@ client.on('messageCreate', async (message) => {
       await message.reply("⚠️ 분석할 요리 데이터가 없습니다.");
     }
   }
+
+
+
+
+
+    if (message.content.startsWith('@연금')) {
+      const content = message.content.slice('@연금'.length).trim();
+
+      const regex = /🧪\[(.+?)\] \| (\d+) → (\d+)/g;
+      const items = {};
+      let match;
+
+      while ((match = regex.exec(content)) !== null) {
+        const [, name, beforeStr, afterStr] = match;
+        items[name] = {
+          before: parseInt(beforeStr),
+          after: parseInt(afterStr),
+        };
+      }
+
+    
+
+      // 추출된 룬 데이터(items 객체)를 순회하며 각 룬에 대해 처리
+      for (const name in items) {
+        if (items.hasOwnProperty(name)) { // 객체 자신의 속성인지 확인
+          const item = items[name];
+          // bestRunePrices에서 해당 룬의 최고 가격을 가져옵니다.
+          // 만약 bestRunePrices에 없는 룬이라면 max는 undefined가 됩니다.
+          const max = bestRunePrices[name];
+
+          // formatRune 함수를 사용하여 결과를 포맷하고 results 배열에 추가
+          results.push(formatRune(name, item.before, item.after, max));
+        }
+      }
+
+
+       if (results.length > 0) {
+      // 결과를 diff 코드 블록으로 감싸서 응답
+        await message.reply(`[연금 분석 결과]\n\`\`\`diff\n${results.join('\n')}\n\`\`\``);
+      } else {
+        // 추출된 룬 데이터가 없다면 안내 메시지 응답
+        await message.reply("⚠️ 분석할 연금 데이터가 없습니다. '🧪[룬 이름] | 이전값 → 현재값' 형식으로 입력해주세요.");
+      }
+      // 연금 명령어 처리가 완료되었으므로 여기서 return 
+      // 다른 명령어와 겹치지 않도록  return
+      return;
+    }
 
   
 
