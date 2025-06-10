@@ -1,4 +1,5 @@
 const { Client, Events, GatewayIntentBits } = require('discord.js');
+const dayjs = require('dayjs'); // 날짜 계산을 위해 dayjs 사용
 require('dotenv').config();
 
 const client = new Client({
@@ -46,6 +47,40 @@ function formatItem(name, before, after, max) {
   }
 }
 
+// 메뉴 데이터를 날짜별로 정리한 객체입니다.
+// 날짜 형식은 "YYYY-MM-DD"를 사용합니다.
+const menus = {
+  // 예시 데이터 (실제 날짜에 맞게 값을 수정하세요)
+  [dayjs().format('2025-06-10')]: {
+    "아침": "토스트와 달걀",
+    "점심": "김밥",
+    "저녁": "비빔밥"
+  },
+  [dayjs().add(1, 'day').format('2025-06-11')]: {
+    "아침": "시리얼과 우유",
+    "점심": "라면",
+    "저녁": "스테이크"
+  },
+  [dayjs().subtract(1, 'day').format('2025-06-12')]: {
+    "아침": "팬케이크",
+    "점심": "샌드위치",
+    "저녁": "파스타"
+  }
+};
+
+// 상대적 날짜 키워드를 입력받아 대상 날짜 문자열("YYYY-MM-DD")로 변환하는 함수입니다.
+function getDateFromRelativeKeyword(keyword) {
+  let targetDate = dayjs();
+  if (keyword === '내일') {
+    targetDate = targetDate.add(1, 'day');
+  } else if (keyword === '어제') {
+    targetDate = targetDate.subtract(1, 'day');
+  }
+  return targetDate.format('YYYY-MM-DD');
+}
+
+
+//여기서부터 디코 메세지 받기
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
 
@@ -91,6 +126,32 @@ client.on('messageCreate', async (message) => {
       await message.reply("⚠️ 분석할 요리 데이터가 없습니다.");
     }
   }
+
+
+
+
+
+      // 명령어 패턴: "오늘 아침?", "내일 점심?" 또는 "어제 저녁?"과 같은 형식이어야 합니다.
+    // 정규표현식을 사용하여 상대 날짜와 식사 시간을 추출합니다.
+    const commandRegex = /^(오늘|내일|어제)\s*(아침|점심|저녁)\?$/;
+    const match = message.content.match(commandRegex);
+    
+    if (!match) return; // 명령어 형식과 일치하지 않으면 무시
+
+    // 정규표현식에서 추출한 상대 날짜와 식사 시간입니다.
+    const relativeDate = match[1];
+    const mealTime = match[2];
+
+    // 입력받은 상대 날짜 키워드를 이용하여 정확한 날짜 문자열을 얻습니다.
+    const targetDate = getDateFromRelativeKeyword(relativeDate);
+
+    // 메뉴 데이터에서 해당 날짜와 식사 시간에 해당하는 메뉴를 검색합니다.
+    if (menus[targetDate] && menus[targetDate][mealTime]) {
+        const menuItem = menus[targetDate][mealTime];
+        message.reply(`${targetDate} ${mealTime} 메뉴: ${menuItem}`);
+    } else {
+        message.reply(`해당 날짜(${targetDate})의 ${mealTime} 메뉴가 없습니다.`);
+    }
 });
 
 client.login(token);
