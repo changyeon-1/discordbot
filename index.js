@@ -50,42 +50,42 @@ function formatItem(name, before, after, max) {
 // 메뉴 데이터를 날짜별로 정리한 객체입니다.
 // 날짜 형식은 "YYYY-MM-DD"를 사용합니다.
 const menus = {
-  [dayjs().subtract(1, 'day').format('2025-06-09')]: {
+  '2025-06-09': {
     "아침": "쌀밥 홍합살미역국 삼치데리야끼구이 토달볶 숙주나물무침 김치",
     "점심": "쌀밥 닭개장 수제탕수육&소스 잡채 골뱅이야채무침 김치",
     "저녁": "쌀밥 바지락된장국 소고기낙지볶음 느타리버섯전 쪽파김가루무침 김치"
   },
   // 예시 데이터 (실제 날짜에 맞게 값을 수정하세요)
-  [dayjs().format('2025-06-10')]: {
+  '2025-06-10': {
     "아침": "쌀밥 옹심이만둣국 오색산적 마파두부 브로콜리무침 김치",
     "점심": "쌀밥 부대찌개 꽃닭조림 마늘순대구이&소스 마늘쫑무침 김치",
     "저녁": "쌀밥 소고기뭇국 코다리콩나물찜 모듬소세지볶음 시금치나물무침 김치"
   },
-  [dayjs().add(1, 'day').format('2025-06-11')]: {
+  '2025-06-11': {
     "아침": "쌀밥 얼갈이된장국 돈사태감자조림 호박나물볶음 미역줄기볶음 김치",
     "점심": "쌀밥 어묵곤약국 오삼불고기 쑥갓두부무침 김치",
     "저녁": "쌀밥 건새우계란국 치킨까스샐러드 버터카레 열무나물무침 김치"
   },
-  [dayjs().add(2, 'day').format('2025-06-12')]: {
-    "아침": "시리얼과 우유",
-    "점심": "라면",
-    "저녁": "스테이크"
+  '2025-06-12': {
+    "아침": "쌀밥 순두부찌개 고갈비구이 맛살야채볶음 청경채나물무침 김치",
+    "점심": "쌀밥 비빕밥/아욱된장국 떡갈비야채조림 계란찜(환아) 단무지무침 콩나물무침(환아) 김치",
+    "저녁": "쌀밥 유부장국 오리훈제볶음 볼어묵피망볶음 멸치아몬드볶음 김치"
   },
-  [dayjs().add(3, 'day').format('2025-06-13')]: {
-    "아침": "시리얼과 우유",
-    "점심": "라면",
-    "저녁": "스테이크"
+  '2025-06-13': {
+    "아침": "쌀밥 북어채콩나물국 두부스테이크 감자채볶음 참나물무침 김치",
+    "점심": "쌀밥 소고기미역국 닭갈비 야끼만두 배추찜 김치",
+    "저녁": "쌀밥 팽이버섯된장국 돈육짜장볶음 야채고로케&케찹 도토리묵야채무침 김치"
   },
-  [dayjs().add(4, 'day').format('2025-06-14')]: {
-    "아침": "시리얼과 우유",
-    "점심": "라면",
-    "저녁": "스테이크"
+  '2025-06-14': {
+    "아침": "쌀밥 조랭이떡국 갈치무조림 동그랑땡야채조림 얼갈이나물무침 김치",
+    "점심": "쌀밥 돈뼈해장국 치즈돈까스 쥬키니파스타 꽃맛살샐러드 김치",
+    "저녁": "쌀밥 동태탕 비앤나야채볶음 두부구이 부추나물무침 김치"
   },
-  [dayjs().add(5, 'day').format('2025-06-15')]: {
-    "아침": "시리얼과 우유",
-    "점심": "라면",
-    "저녁": "스테이크"
-  }
+  '2025-06-15': {
+    "아침": "쌀밥 육개장 너비아니전 애기새송이볶음 자반볶음 김치",
+    "점심": "쌀밥 짬뽕수제비 돈육메알장조림 옥수수김치전 치커리겉절이 김치",
+    "저녁": "쌀밥 닭곰탕 조기구이 분홍소세지전 숙주나물무침 김치"
+  },
 };
 
 // 상대적 날짜 키워드를 입력받아 대상 날짜 문자열("YYYY-MM-DD")로 변환하는 함수입니다.
@@ -95,7 +95,12 @@ function getDateFromRelativeKeyword(keyword) {
     targetDate = targetDate.add(1, 'day');
   } else if (keyword === '어제') {
     targetDate = targetDate.subtract(1, 'day');
+  } else if (keyword === '모레') { // '모레' 추가
+    targetDate = targetDate.add(2, 'day');
+  } else if (keyword === '엊그제') { // '엊그제' 추가
+    targetDate = targetDate.subtract(2, 'day');
   }
+
   return targetDate.format('YYYY-MM-DD');
 }
 
@@ -153,7 +158,7 @@ client.on('messageCreate', async (message) => {
 
       // 명령어 패턴: "오늘 아침?", "내일 점심?" 또는 "어제 저녁?"과 같은 형식이어야 합니다.
     // 정규표현식을 사용하여 상대 날짜와 식사 시간을 추출합니다.
-    const commandRegex = /^(오늘|내일|어제)\s*(아침|점심|저녁)\?$/;
+    const commandRegex = /^(오늘|내일|어제|엊그제|모레)\s*(아침|점심|저녁)\?$/;
     const match = message.content.match(commandRegex);
     
     if (!match) return; // 명령어 형식과 일치하지 않으면 무시
@@ -168,7 +173,10 @@ client.on('messageCreate', async (message) => {
     // 메뉴 데이터에서 해당 날짜와 식사 시간에 해당하는 메뉴를 검색합니다.
     if (menus[targetDate] && menus[targetDate][mealTime]) {
         const menuItem = menus[targetDate][mealTime];
-        message.reply(`${targetDate} ${mealTime} 메뉴: ${menuItem}`);
+
+        const dayOfWeek = dayjs(targetDate).format('dddd');
+
+        message.reply(`${targetDate} (${dayOfWeek}) ${mealTime} 메뉴: ${menuItem}`);
     } else {
         message.reply(`해당 날짜(${targetDate})의 ${mealTime} 메뉴가 없습니다.`);
     }
