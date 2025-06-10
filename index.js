@@ -33,13 +33,13 @@ const priorityOrder = {
 };
 
 const RunebestPrices = {
-  "투시룬" : 240,
-  "저항룬" : 296,
-  "치유룬" : 341,
-  "호흡룬" : 357,
-  "성급룬" : 441,
-  "반감룬" : 469,
-  "경험룬" : 2557,
+  "룬 ㅣ 투시" : 240,
+  "룬 ㅣ 저항" : 296,
+  "룬 ㅣ 치유" : 341,
+  "룬 ㅣ 호흡" : 357,
+  "룬 ㅣ 성급" : 441,
+  "룬 ㅣ 반감" : 469,
+  "룬 ㅣ 경험" : 2557,
 }
 
 // 포맷 함수
@@ -226,7 +226,7 @@ client.on('messageCreate', async (message) => {
           const item = items[name];
           // bestRunePrices에서 해당 룬의 최고 가격을 가져옵니다.
           // 만약 bestRunePrices에 없는 룬이라면 max는 undefined가 됩니다.
-          const max = bestRunePrices[name];
+          const max = RunebestPrices[name];
 
           // formatRune 함수를 사용하여 결과를 포맷하고 results 배열에 추가
           results.push(formatRune(name, item.before, item.after, max));
