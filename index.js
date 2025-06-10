@@ -88,6 +88,32 @@ const menus = {
   },
 };
 
+// 추천 메뉴 리스트 정의
+const recommendedMenus = [
+  "김치찌개",
+  "된장찌개",
+  "짜장면",
+  "짬뽕",
+  "탕수육",
+  "파스타",
+  "피자",
+  "치킨",
+  "족발",
+  "보쌈",
+  "삼겹살",
+  "초밥",
+  "카레",
+  "돈까스",
+  "부대찌개",
+  "국밥",
+  "비빔밥",
+  "냉면",
+  "칼국수",
+  "떡볶이"
+  // 비둘기님께서 추천하고 싶은 메뉴들을 이곳에 추가하거나 수정하세요.
+];
+
+
 // 상대적 날짜 키워드를 입력받아 대상 날짜 문자열("YYYY-MM-DD")로 변환하는 함수입니다.
 function getDateFromRelativeKeyword(keyword) {
   let targetDate = dayjs();
@@ -180,6 +206,27 @@ client.on('messageCreate', async (message) => {
     } else {
         message.reply(`해당 날짜(${targetDate})의 ${mealTime} 메뉴가 없습니다.`);
     }
+
+
+    // 메뉴 추천 명령어 처리
+  if (message.content === '메뉴추천') {
+    // 추천 메뉴 리스트가 비어있는지 확인
+    if (recommendedMenus.length === 0) {
+      await message.reply("굶어");
+      return; // 리스트가 비어있으면 여기서 함수 종료
+    }
+
+    // 리스트에서 무작위 인덱스 선택
+    const randomIndex = Math.floor(Math.random() * recommendedMenus.length);
+
+    // 선택된 메뉴 가져오기
+    const recommendedMenu = recommendedMenus[randomIndex];
+
+    // 사용자에게 추천 메뉴 응답
+    await message.reply(`**${recommendedMenu}** `);
+    return; // 메뉴 추천 처리가 완료되었으므로 다른 명령어 확인을 중단합니다.
+  }
+
 });
 
 client.login(token);
