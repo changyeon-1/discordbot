@@ -218,7 +218,7 @@ client.on('messageCreate', async (message) => {
         };
       }
 
-    
+      const results = []; 
 
       // 추출된 룬 데이터(items 객체)를 순회하며 각 룬에 대해 처리
       for (const name in items) {
