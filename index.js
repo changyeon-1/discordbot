@@ -178,6 +178,30 @@ client.on('messageCreate', async (message) => {
     }
   }
 
+  
+
+
+  // 메뉴 추천 명령어 처리
+  if (message.content === '메뉴추천') {
+    // 추천 메뉴 리스트가 비어있는지 확인
+    if (recommendedMenus.length === 0) {
+      await message.reply("굶어");
+      return; // 리스트가 비어있으면 여기서 함수 종료
+    }
+
+    // 리스트에서 무작위 인덱스 선택
+    const randomIndex = Math.floor(Math.random() * recommendedMenus.length);
+
+    // 선택된 메뉴 가져오기
+    const recommendedMenu = recommendedMenus[randomIndex];
+
+    // 사용자에게 추천 메뉴 응답
+    await message.reply(`${recommendedMenu}`);
+    return; // 메뉴 추천 처리가 완료되었으므로 다른 명령어 확인을 중단합니다.
+  }
+
+
+
 
 
 
@@ -208,24 +232,7 @@ client.on('messageCreate', async (message) => {
     }
 
 
-    // 메뉴 추천 명령어 처리
-  if (message.content === '메뉴추천') {
-    // 추천 메뉴 리스트가 비어있는지 확인
-    if (recommendedMenus.length === 0) {
-      await message.reply("굶어");
-      return; // 리스트가 비어있으면 여기서 함수 종료
-    }
-
-    // 리스트에서 무작위 인덱스 선택
-    const randomIndex = Math.floor(Math.random() * recommendedMenus.length);
-
-    // 선택된 메뉴 가져오기
-    const recommendedMenu = recommendedMenus[randomIndex];
-
-    // 사용자에게 추천 메뉴 응답
-    await message.reply(`**${recommendedMenu}** `);
-    return; // 메뉴 추천 처리가 완료되었으므로 다른 명령어 확인을 중단합니다.
-  }
+  
 
 });
 
