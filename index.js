@@ -271,6 +271,19 @@ client.on('messageCreate', async (message) => {
 
 
 
+    // **오늘 급식 명령어 처리 (새로 추가)**
+  if (message.content === '오늘 급식') {
+    // 출력할 특정 링크를 여기에 입력하세요.
+    const specificLink = "https://earify.github.io/ysg/bab.html"; // 예: "https://school.meal.go.kr/today"
+
+    // 사용자에게 링크 응답
+    await message.reply(`${specificLink}`);
+    return; // 오늘 급식 처리가 완료되었으므로 여기서 함수 종료
+  }
+
+
+
+
 
 
 
