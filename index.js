@@ -159,7 +159,7 @@ client.on('messageCreate', async (message) => {
   if (message.content.startsWith('@요리')) {
     const content = message.content.slice('@요리'.length).trim();
 
-    const regex = /🍳\[(.+?)\] \| (\d+) → (\d+)/g;
+    const regex = /🍳\[(.+?)\] \| \s*(\d*)\s*→\s*(\d+)/g;
     const items = {};
     let match;
 
