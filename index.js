@@ -206,7 +206,7 @@ client.on('messageCreate', async (message) => {
     if (message.content.startsWith('@연금')) {
       const content = message.content.slice('@연금'.length).trim();
 
-      const regex = /→\s*(\d+)/;
+      const regex = /🧪\[(.+?)\] \| \s*(\d*)\s*→\s*(\d+)/g; 
       const items = {};
       let match;
 
