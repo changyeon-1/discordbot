@@ -3,6 +3,7 @@ const dayjs = require('dayjs'); // 날짜 계산을 위해 dayjs 사용
 const utc = require('dayjs/plugin/utc');
 const timezone = require('dayjs/plugin/timezone');
 require('dotenv').config();
+require('dayjs/locale/ko');
 
 const client = new Client({
   intents: [
